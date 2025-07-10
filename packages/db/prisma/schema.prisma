@@ -1,0 +1,118 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Game-related fields
+  hasUnlockedMultiplayer Boolean @default(false)
+  xp                     Int     @default(0)
+  level                  Int     @default(1)
+  avatar                 String?
+
+  // Relations
+  races         Race[]
+  purchases     Purchase[]
+  gameSessions  GameSession[]
+  storySessions StorySession[]
+  scores        Score[]
+}
+
+model Race {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  wpm       Float
+  accuracy  Float
+  text      String
+  duration  Int      // in seconds
+  mode      String   // "single" | "multiplayer"
+  rank      Int?     // for multiplayer races
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  roomId    String?
+  room      Room?    @relation(fields: [roomId], references: [id])
+}
+
+model Room {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  status    String   // "waiting" | "in_progress" | "completed"
+  text      String
+  mode      String   // "typing" | "rpg" | "story"
+
+  // Relations
+  races     Race[]
+  sessions  GameSession[]
+  stories   StorySession[]
+}
+
+model Purchase {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  amount    Float
+  currency  String
+  status    String   // "pending" | "completed" | "failed"
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  gameType  GameType
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  scores    Score[]
+}
+
+model StorySession {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  status    String   // "active" | "completed"
+  story     String   // JSON string of the story content
+  votes     Json     // JSON array of votes
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+}
+
+model Score {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+  wpm           Int
+  accuracy      Float
+  createdAt     DateTime    @default(now())
+}
+
+enum GameType {
+  SPEED
+  CODE
+  CONCEPTS
+} 

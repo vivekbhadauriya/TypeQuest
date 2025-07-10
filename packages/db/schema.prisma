@@ -1,0 +1,129 @@
+// TypeQuest Prisma Schema
+// User, Race, GameSession, Purchase, Room, Stats, etc.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  username    String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  races       Race[]
+  gameSessions GameSession[]
+  purchases   Purchase[]
+  rooms       Room[] @relation("RoomOwner")
+  stats       UserStats?
+  // Multiplayer gating
+  freeRaces   Int      @default(0)
+  hasUnlock   Boolean  @default(false)
+}
+
+model Race {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  type        RaceType
+  users       RaceUser[]
+  text        String
+  results     Json?
+  roomId      String?
+  room        Room?    @relation(fields: [roomId], references: [id])
+}
+
+enum RaceType {
+  SINGLE
+  MULTIPLAYER
+  STORY
+}
+
+model RaceUser {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  race      Race     @relation(fields: [raceId], references: [id])
+  raceId    String
+  wpm       Int
+  accuracy  Float
+  rank      Int
+  stats     Json?
+}
+
+model GameSession {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  mode        GameMode
+  startedAt   DateTime @default(now())
+  endedAt     DateTime?
+  xpGained    Int      @default(0)
+  level       Int      @default(1)
+  avatar      String?
+  rpgStats    Json?
+}
+
+enum GameMode {
+  TYPING_TEST
+  RPG
+  STORY
+}
+
+model Purchase {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  amount    Int
+  type      PurchaseType
+}
+
+enum PurchaseType {
+  UNLOCK
+  COSMETIC
+}
+
+model Room {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  owner     User     @relation("RoomOwner", fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+  races     Race[]
+  members   RoomMember[]
+  type      RoomType
+}
+
+enum RoomType {
+  MULTIPLAYER
+  RPG
+  STORY
+}
+
+model RoomMember {
+  id      String @id @default(uuid())
+  room    Room   @relation(fields: [roomId], references: [id])
+  roomId  String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  joinedAt DateTime @default(now())
+}
+
+model UserStats {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  totalRaces Int     @default(0)
+  bestWpm   Int      @default(0)
+  avgWpm    Float    @default(0)
+  bestAccuracy Float @default(0)
+  xp        Int      @default(0)
+  level     Int      @default(1)
+} 
