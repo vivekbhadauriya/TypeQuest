@@ -1,84 +1,93 @@
-# Turborepo starter
+# TypeQuest
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack typing game platform built with Next.js, Express.js, and TypeScript.
 
-## Using this example
+## Features
 
-Run the following command:
+- **Typing Test Mode**
+  - Single-player WPM & accuracy tests
+  - Multiplayer races with real-time progress
+  - Free for 3 races, then ₹9 lifetime unlock
 
-```sh
-npx create-turbo@latest
+- **RPG Battle Arena**
+  - Solo vs. AI or PvP battles
+  - Real-time HP/Mana sync
+  - XP & leveling system
+
+- **Story Racer**
+  - Collaborative writing rooms
+  - AI-seeded prompts
+  - Real-time voting & progress
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, Zustand
+- **Backend**: Express.js, TypeScript, Socket.io, Auth.js, Redis
+- **Database**: PostgreSQL + Prisma ORM
+- **Auth**: Auth.js with JWT in HTTP-only cookies
+- **Real-Time**: Socket.io + Redis Pub/Sub
+- **Email**: Resend
+- **Export**: html2canvas, PDFKit
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- PostgreSQL
+- Redis
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/TypeQuest.git
+   cd TypeQuest
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp apps/web/.env.example apps/web/.env
+   cp apps/server/.env.example apps/server/.env
+   ```
+
+4. Start the development servers:
+   ```bash
+   npm run dev
+   ```
+
+### Development
+
+- `npm run dev` - Start all apps in development mode
+- `npm run build` - Build all apps and packages
+- `npm run lint` - Run ESLint
+- `npm run check-types` - Run TypeScript type checking
+
+## Project Structure
+
+```
+TypeQuest/
+├── apps/
+│   ├── web/       # Next.js frontend
+│   └── server/    # Express.js backend
+├── packages/
+│   ├── db/        # Prisma schema & migrations
+│   └── ui/        # Shared React components
 ```
 
-## What's inside?
+## Contributing
 
-This Turborepo includes the following packages/apps:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Apps and Packages
+## License
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
